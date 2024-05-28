@@ -5,18 +5,21 @@
 #include <tuple>
 
 
-template <typename T>
+template <typename nodeType, typename structureType>
 class Graphs {
-
-typedef std::vector<T> vector;
-typedef std::tuple<T,T> tuple;
-
 
 private:
 public:
-    vector nodes;
-    std::vector<tuple> edges;
     
+    structureType graph;
+
+    bool addNode(nodeType newNode) = 0;
+    bool addEdge(nodeType node1, nodeType node2) = 0;
+    bool removeNode(nodeType node) = 0;
+    bool removeEdge(nodeType node1, nodeType node2) = 0;
+
+    void createGraph(structureType graph) = 0;
+
     Graphs();
     ~Graphs();
 };
