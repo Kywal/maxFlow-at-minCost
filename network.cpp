@@ -13,9 +13,8 @@ private:
     int arcAmount = 0;
 
 public:
-    
-    int addNode() { return ++nodeAmount; }
-    
+    int sourceID, terminalID;
+        
     int addArc(int src, int dest, int capacity, int cost) {
         adjacencyMatrix[src][dest] = {capacity, cost};     
     }
