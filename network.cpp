@@ -15,8 +15,8 @@ private:
 public:
     int sourceID, terminalID;
         
-    int addArc(int src, int dest, int capacity, int cost) {
-        adjacencyMatrix[src][dest] = {capacity, cost};     
+    cap_cost addArc(int src, int dest, int capacity, int cost) {
+        return adjacencyMatrix[src][dest] = {capacity, cost};     
     }
 
     Network(int nodeAmount, int arcAmount) {
