@@ -13,7 +13,7 @@ private:
 public:
     int nodeAmount = 0;
     int arcAmount = 0;
-    std::pair<int,int> source, sink; // <id,flow>
+    std::pair<int,int> source, terminal; // <id,flow>
         
     cap_cost addArc(int src, int dest, int capacity, int cost) {
         return adjacencyMatrix[src][dest] = {capacity, cost};     
