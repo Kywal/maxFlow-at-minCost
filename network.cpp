@@ -9,11 +9,11 @@ typedef std::pair<int,int> cap_cost;
 
 private:
     cap_cost** adjacencyMatrix;
-    int nodeAmount = 0;
-    int arcAmount = 0;
 
 public:
-    int sourceID, terminalID;
+    int nodeAmount = 0;
+    int arcAmount = 0;
+    std::pair<int,int> source, sink; // <id,flow>
         
     cap_cost addArc(int src, int dest, int capacity, int cost) {
         return adjacencyMatrix[src][dest] = {capacity, cost};     
