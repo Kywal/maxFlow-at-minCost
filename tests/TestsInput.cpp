@@ -4,9 +4,9 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "network.cpp"
+#include "../model/network.cpp"
 
-class Tests {
+class TestsInput {
 
 typedef std::string string;
 
@@ -14,7 +14,7 @@ private:
 
 public:
 
-    Network* readGraphFile(string filePath) {
+    Network* readGraphFile(string filePath, int maxNodeAmount) {
         char character;
         string line;
         Network* graph;
@@ -35,17 +35,17 @@ public:
                     
                     // Problem line
                     case  'p':
-                        graph = readProblem(testCase, graph);
+                        graph = readProblem(testCase, graph, maxNodeAmount);
                         break;
                     
                     // Node Descriptors
                     case 'n':
-                        readSourceAndTerminal(testCase, graph);
+                        readSourceAndTerminal(testCase, graph, maxNodeAmount);
                         break;
 
                     // Arc Descriptors
                     case 'a':
-                        readArc(testCase, graph);
+                        readArc(testCase, graph, maxNodeAmount);
                         break;
             
                     default:
@@ -72,7 +72,7 @@ public:
         std::cout << comment << std::endl;
     }
 
-    Network* readProblem(std::ifstream &stream, Network* graph){
+    Network* readProblem(std::ifstream &stream, Network* graph, int maxNodeAmount){
         string problemTitle,nodeAmount, arcAmount;
         captureBlankSpace(stream);
         std::getline(stream, problemTitle, ' ');
@@ -80,17 +80,19 @@ public:
         std::getline(stream, nodeAmount, ' ');
         std::getline(stream, arcAmount, '\n');
 
-        return graph = new Network(stoi(nodeAmount),stoi(arcAmount));
+        int safeNodeAmount = stoi(nodeAmount) > maxNodeAmount ? maxNodeAmount : stoi(nodeAmount); 
+
+        return graph = new Network(safeNodeAmount,stoi(arcAmount));
     }
 
-    void readSourceAndTerminal(std::ifstream &stream, Network* graph){
+    void readSourceAndTerminal(std::ifstream &stream, Network* graph, int maxNodeAmount){
         string sourceID, sourceFlow, terminalID, terminalFlow;
         captureBlankSpace(stream);
 
         // source
         std::getline(stream, sourceID, ' ');
         graph->source.first = stoi(sourceID)-1;
-
+        if(graph->source.first > maxNodeAmount) throw 101;
 
         std::getline(stream, sourceFlow, '\n');
         graph->source.second =  stoi(sourceFlow);        
@@ -101,12 +103,13 @@ public:
 
         std::getline(stream, terminalID, ' ');
         graph->terminal.first = stoi(terminalID)-1;
+        if(graph->terminal.first > maxNodeAmount) throw 101;
 
         std::getline(stream, sourceFlow, '\n');
         graph->terminal.second =  stoi(sourceFlow);
     }
 
-    void readArc(std::ifstream &stream, Network* graph){
+    void readArc(std::ifstream &stream, Network* graph, int maxNodeAmount){
         string src, term, min, max, cost;
         captureBlankSpace(stream);
 
@@ -116,15 +119,20 @@ public:
         std::getline(stream, max, ' ');
         std::getline(stream, cost, '\n');
 
-        graph->addArc(stoi(src)-1,stoi(term)-1,stoi(min),stoi(max),stoi(cost));
+        int sourceId = stoi(src);
+        int terminalId = stoi(term);
+
+        if(sourceId <= maxNodeAmount && terminalId <= maxNodeAmount) {
+            graph->addArc(sourceId-1,terminalId-1,stoi(min),stoi(max),stoi(cost));
+        }
     }
 
     void captureBlankSpace(std::ifstream &stream){
         stream.get();
     }
 
-    Tests(){};
-    ~Tests(){};
+    TestsInput(){};
+    ~TestsInput(){};
 };
 
 #endif
