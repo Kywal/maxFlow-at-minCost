@@ -1,33 +1,61 @@
 #ifndef network
 #define network
 
-#include <utility>
+#include <tuple>
+#include <iostream>
 
 class Network {
 
-typedef std::pair<int,int> cap_cost;
+typedef std::tuple<int,int,int> min_max_cost;
 
 private:
-    cap_cost** adjacencyMatrix;
+    min_max_cost** adjMatrix;
 
 public:
     int nodeAmount = 0;
     int arcAmount = 0;
     std::pair<int,int> source, terminal; // <id,flow>
-        
-    cap_cost addArc(int src, int dest, int capacity, int cost) {
-        return adjacencyMatrix[src][dest] = {capacity, cost};     
+
+    min_max_cost** getMatrix() const { return adjMatrix; }
+    void setMatrix(min_max_cost** matrix) {adjMatrix = matrix;} 
+
+    min_max_cost addArc(int src, int dest, int min, int max, int cost) {
+        return adjMatrix[src][dest] = {min, max, cost};     
+    }
+
+    void printAdjMatrix() {
+        std::cout << "[" << std::endl;
+        for (size_t i = 0; i < nodeAmount; i++) {
+            for (size_t j = 0; j < nodeAmount; j++) {
+                std::cout << "{" << std::get<0>(adjMatrix[i][j]) << "," << std::get<1>(adjMatrix[i][j]) << "," << std::get<2>(adjMatrix[i][j]) << "} ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "]" << std::endl;
+    }
+
+    Network operator=(const Network &net) {
+        this->adjMatrix = net.getMatrix();
+        return *this;
     }
 
     Network(int nodeAmount, int arcAmount) {
         this->nodeAmount = nodeAmount;
         this->arcAmount = arcAmount;
 
-        adjacencyMatrix = new cap_cost*[nodeAmount];
+        adjMatrix = new min_max_cost*[nodeAmount];
+        for (size_t i = 0; i < nodeAmount; i++) {
+            adjMatrix[i] = new min_max_cost[nodeAmount];
+        }
+        
     }
 
     ~Network() {
-        delete []* adjacencyMatrix;
+        for (size_t i = 0; i < nodeAmount; i++) {
+            delete[] adjMatrix[i];
+        }
+
+        delete[] adjMatrix;
     }
 
 };
