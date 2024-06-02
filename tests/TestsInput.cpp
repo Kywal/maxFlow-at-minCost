@@ -15,6 +15,7 @@ private:
 public:
 
     Network* readGraphFile(string filePath, int maxNodeAmount) {
+        int *arcCounter = new int; *arcCounter = 0;
         char character;
         string line;
         Network* graph;
@@ -45,7 +46,7 @@ public:
 
                     // Arc Descriptors
                     case 'a':
-                        readArc(testCase, graph, maxNodeAmount);
+                        readArc(testCase, graph, maxNodeAmount, arcCounter);
                         break;
             
                     default:
@@ -59,6 +60,7 @@ public:
             }
             
             testCase.close();
+            graph->arcAmount = *arcCounter;
             return graph;
         } else {
             std::cout << "Não foi possível ler o arquivo :/\n";
@@ -69,7 +71,6 @@ public:
 
     void readComment(std::ifstream &stream){
         string comment;
-        captureBlankSpace(stream);
         
         std::getline(stream, comment);
 
@@ -113,7 +114,7 @@ public:
         graph->terminal.second =  stoi(sourceFlow);
     }
 
-    void readArc(std::ifstream &stream, Network* graph, int maxNodeAmount){
+    void readArc(std::ifstream &stream, Network* graph, int maxNodeAmount, int* arcCounter){
         string src, term, min, max, cost;
         captureBlankSpace(stream);
 
@@ -127,6 +128,7 @@ public:
         int terminalId = stoi(term);
 
         if(sourceId <= maxNodeAmount && terminalId <= maxNodeAmount) {
+            *arcCounter = (*arcCounter) + 1;
             graph->addArc(sourceId-1,terminalId-1,stoi(min),stoi(max),stoi(cost));
         }
     }
