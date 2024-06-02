@@ -57,10 +57,14 @@ public:
                         break;
                 }    
             }
-
+            
+            testCase.close();
+            return graph;
+        } else {
+            std::cout << "Não foi possível ler o arquivo :/\n";
+            return nullptr;
         }
 
-        return graph;
     }
 
     void readComment(std::ifstream &stream){
