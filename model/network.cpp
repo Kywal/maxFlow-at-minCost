@@ -6,10 +6,10 @@
 
 class Network {
 
-typedef std::tuple<int,int,int> min_max_cost;
+typedef std::tuple<int,int,int,int> flow_min_max_cost;
 
 private:
-    min_max_cost** adjMatrix;
+    flow_min_max_cost** adjMatrix;
     int* flowMatrix;
 
 public:
@@ -17,14 +17,14 @@ public:
     int arcAmount = 0;
     std::pair<int,int> source, terminal; // <id,flow>
 
-    min_max_cost** getMatrix() const { return adjMatrix; }
-    void setMatrix(min_max_cost** matrix) {adjMatrix = matrix; } 
+    flow_min_max_cost** getMatrix() const { return adjMatrix; }
+    void setMatrix(flow_min_max_cost** matrix) {adjMatrix = matrix; } 
 
     int* getFlowMatrix() const {return flowMatrix; }
     void setFlowMatrix(int* flowMatrix) {this->flowMatrix = flowMatrix; }
 
-    min_max_cost addArc(int src, int dest, int min, int max, int cost) {
-        return adjMatrix[src][dest] = {min, max, cost};     
+    flow_min_max_cost addArc(int src, int dest, int min, int max, int cost) {
+        return adjMatrix[src][dest] = {0, min, max, cost};     
     }
 
     void printAdjMatrix() {
@@ -48,9 +48,9 @@ public:
         this->arcAmount = arcAmount;
 
         flowMatrix = new int[nodeAmount];
-        adjMatrix = new min_max_cost*[nodeAmount];
+        adjMatrix = new flow_min_max_cost*[nodeAmount];
         for (size_t i = 0; i < nodeAmount; i++) {
-            adjMatrix[i] = new min_max_cost[nodeAmount];
+            adjMatrix[i] = new flow_min_max_cost[nodeAmount];
             flowMatrix[i] = 0;
         }
         
