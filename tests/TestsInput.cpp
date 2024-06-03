@@ -94,13 +94,17 @@ public:
         string sourceID, sourceFlow, terminalID, terminalFlow;
         captureBlankSpace(stream);
 
+        int* flowMatrix = graph->getFlowMatrix();
+
         // source
         std::getline(stream, sourceID, ' ');
         graph->source.first = stoi(sourceID)-1;
         if(graph->source.first > maxNodeAmount) throw 101;
 
         std::getline(stream, sourceFlow, '\n');
-        graph->source.second =  stoi(sourceFlow);        
+        graph->source.second =  stoi(sourceFlow);
+        int srcId = graph->source.first;
+        flowMatrix[srcId] = graph->source.second;        
 
         // terminal
         captureBlankSpace(stream);
@@ -112,6 +116,10 @@ public:
 
         std::getline(stream, terminalFlow, '\n');
         graph->terminal.second =  stoi(terminalFlow);
+        int termId = graph->terminal.first;
+        flowMatrix[termId] = graph->terminal.second;
+
+        graph->setFlowMatrix(flowMatrix);
     }
 
     void readArc(std::ifstream &stream, Network* graph, int maxNodeAmount, int* arcCounter){
