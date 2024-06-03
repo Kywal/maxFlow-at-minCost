@@ -27,6 +27,8 @@ public:
         return adjMatrix[src][dest] = {0, min, max, cost};     
     }
 
+    flow_min_max_cost getArc(int src, int dest) { return adjMatrix[src][dest]; }
+
     void printAdjMatrix() {
         std::cout << "[" << std::endl;
         for (size_t i = 0; i < nodeAmount; i++) {
