@@ -51,6 +51,7 @@ public:
         adjMatrix = new min_max_cost*[nodeAmount];
         for (size_t i = 0; i < nodeAmount; i++) {
             adjMatrix[i] = new min_max_cost[nodeAmount];
+            flowMatrix[i] = 0;
         }
         
     }
