@@ -110,8 +110,8 @@ public:
         graph->terminal.first = stoi(terminalID)-1;
         if(graph->terminal.first > maxNodeAmount) throw 101;
 
-        std::getline(stream, sourceFlow, '\n');
-        graph->terminal.second =  stoi(sourceFlow);
+        std::getline(stream, terminalFlow, '\n');
+        graph->terminal.second =  stoi(terminalFlow);
     }
 
     void readArc(std::ifstream &stream, Network* graph, int maxNodeAmount, int* arcCounter){
