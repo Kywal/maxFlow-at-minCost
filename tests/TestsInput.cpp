@@ -1,5 +1,5 @@
-#ifndef tests
-#define tests
+#ifndef testsIn
+#define testsIn
 
 #include <string>
 #include <fstream>
