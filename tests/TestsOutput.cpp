@@ -1,7 +1,10 @@
+#ifndef testsOut
+#define testsOut
+
 #include <iostream>
 #include <fstream>
 #include "../model/network.cpp"
-
+#include "../model/arc.h"
 
 class TestsOutput {
 
@@ -44,19 +47,18 @@ public:
     }
 
     void writeArc(std::ofstream &stream, Network &net) {
-        std::tuple<int,int,int>** adjMatrix = net.getMatrix();
+        Arc** adjMatrix = net.getMatrix();
         
 
         for (size_t src = 0; src < net.nodeAmount; src++) {
             for (size_t term = 0; term < net.nodeAmount; term++) {
                 
-                std::tuple<int,int,int> arc = adjMatrix[src][term];
+                Arc arcNet = adjMatrix[src][term];
                 
-                // if max flow is different of 0, add the arc
-                if (std::get<1>(arc) != 0) {
-                    int minFlow = std::get<0>(arc);
-                    int maxFlow = std::get<1>(arc);
-                    int cost = std::get<2>(arc);
+                if(arcNet.exists == 1) {
+                    int minFlow = arcNet.minCap;
+                    int maxFlow = arcNet.maxCap;
+                    int cost = arcNet.cost;
 
                     stream << "a " << src+1 << " " << term+1 << " " << minFlow << " " << maxFlow << " " << cost << "\n"; 
                 }
@@ -69,3 +71,5 @@ public:
     TestsOutput(/* args */){}
     ~TestsOutput(){}
 };
+
+#endif

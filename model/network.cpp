@@ -3,13 +3,12 @@
 
 #include <tuple>
 #include <iostream>
+#include "arc.h"
 
 class Network {
 
-typedef std::tuple<int,int,int,int> flow_min_max_cost;
-
 private:
-    flow_min_max_cost** adjMatrix;
+    Arc** adjMatrix;
     int* flowMatrix;
 
 public:
@@ -17,23 +16,27 @@ public:
     int arcAmount = 0;
     std::pair<int,int> source, terminal; // <id,flow>
 
-    flow_min_max_cost** getMatrix() const { return adjMatrix; }
-    void setMatrix(flow_min_max_cost** matrix) {adjMatrix = matrix; } 
+    Arc** getMatrix() const { return adjMatrix; }
+    void setMatrix(Arc** matrix) {adjMatrix = matrix; } 
 
     int* getFlowMatrix() const {return flowMatrix; }
     void setFlowMatrix(int* flowMatrix) {this->flowMatrix = flowMatrix; }
 
-    flow_min_max_cost addArc(int src, int dest, int min, int max, int cost) {
-        return adjMatrix[src][dest] = {0, min, max, cost};     
+    Arc addArc(int src, int dest, int min, int max, int cost) {
+        return adjMatrix[src][dest] = Arc(1, min, max, cost);     
     }
 
-    flow_min_max_cost getArc(int src, int dest) { return adjMatrix[src][dest]; }
+    Arc getArc(int src, int dest) { return adjMatrix[src][dest]; }
+    Arc setArc(int src, int dest, int flow, int min, int max, int cost) {
+        return adjMatrix[src][dest] = Arc(1, flow, min, max, cost);
+    }
 
     void printAdjMatrix() {
         std::cout << "[" << std::endl;
         for (size_t i = 0; i < nodeAmount; i++) {
             for (size_t j = 0; j < nodeAmount; j++) {
-                std::cout << "{" << std::get<0>(adjMatrix[i][j]) << "," << std::get<1>(adjMatrix[i][j]) << "," << std::get<2>(adjMatrix[i][j]) << "} ";
+                std::cout << " ";
+                std::cout << adjMatrix[i][j];
             }
             std::cout << std::endl;
         }
@@ -42,6 +45,11 @@ public:
 
     Network operator=(const Network &net) {
         this->adjMatrix = net.getMatrix();
+        this->nodeAmount = net.nodeAmount;
+        this->arcAmount = net.arcAmount;
+        this->source = net.source;
+        this->terminal = net.terminal;
+
         return *this;
     }
 
@@ -50,9 +58,9 @@ public:
         this->arcAmount = arcAmount;
 
         flowMatrix = new int[nodeAmount];
-        adjMatrix = new flow_min_max_cost*[nodeAmount];
+        adjMatrix = new Arc*[nodeAmount];
         for (size_t i = 0; i < nodeAmount; i++) {
-            adjMatrix[i] = new flow_min_max_cost[nodeAmount];
+            adjMatrix[i] = new Arc[nodeAmount];
             flowMatrix[i] = 0;
         }
         
